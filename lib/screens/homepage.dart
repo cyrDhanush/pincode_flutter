@@ -10,15 +10,18 @@ class homePage extends StatefulWidget {
   State<homePage> createState() => _homePageState();
 }
 
-class _homePageState extends State<homePage> {
+class _homePageState extends State<homePage>
+    with SingleTickerProviderStateMixin {
   List datalist = <dataModel>[];
   int currentvalue = 0;
   int currentpincode = 604407;
   TextEditingController pincodecontroller = TextEditingController();
+  late AnimationController controller;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    controller = AnimationController(vsync: this);
     pincodecontroller.text = currentpincode.toString();
     refreshdata();
   }
@@ -33,13 +36,25 @@ class _homePageState extends State<homePage> {
       appBar: AppBar(
         title: Text("Pincode"),
         actions: [
-          Switch(
-            value: (context.watch<themeprovider>().current_theme == 0)
-                ? (false)
-                : (true),
-            onChanged: (a) {
+          IconButton(
+            onPressed: () {
               context.read<themeprovider>().toggle();
             },
+            icon: AnimatedCrossFade(
+              firstChild: Icon(
+                Icons.light_mode_rounded,
+                color: Theme.of(context).primaryColorDark,
+              ),
+              secondChild: Icon(
+                Icons.dark_mode_rounded,
+                color: Theme.of(context).primaryColorLight,
+              ),
+              crossFadeState:
+                  (context.watch<themeprovider>().current_theme == 0)
+                      ? (CrossFadeState.showFirst)
+                      : (CrossFadeState.showSecond),
+              duration: Duration(milliseconds: 300),
+            ),
           ),
         ],
       ),
@@ -65,6 +80,13 @@ class _homePageState extends State<homePage> {
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 5, horizontal: 13),
                   ),
+                  onSubmitted: (s) {
+                    setState(() {
+                      currentvalue = 0;
+                      refreshdata();
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    });
+                  },
                 ),
               ),
               SizedBox(
@@ -75,7 +97,7 @@ class _homePageState extends State<homePage> {
                   setState(() {
                     currentvalue = 0;
                     refreshdata();
-                    print("happened");
+                    FocusManager.instance.primaryFocus?.unfocus();
                   });
                 },
                 child: Text("Search"),

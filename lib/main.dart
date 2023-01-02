@@ -27,7 +27,9 @@ class MyApp extends StatelessWidget {
             ? (Brightness.light)
             : (Brightness.dark),
         useMaterial3: true,
-        colorSchemeSeed: Colors.green,
+        // colorSchemeSeed: Colors.green,
+        // primaryColor: Colors.pink,
+        primarySwatch: Colors.green,
         textTheme: TextTheme(
           titleSmall: TextStyle(
             fontSize: 18,
